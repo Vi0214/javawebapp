@@ -1,0 +1,23 @@
+- hosts: servers
+  remote_user: ec2-user
+  become: yes
+  vars:
+    tomcat_url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.23/bin/apache-tomcat-10.0.23.tar.gz
+    req_java: amazon-linux-extras install java-openjdk11 -y
+  tasks:
+  - name: checking java and registering if exist
+    stat:
+      path: /usr/lib/
+    register: java_path
+  - name: installing java
+    command: "{{req_java}}"
+    when: java_path.stat.exists == false
+  - name: install and untar tomcat
+    unarchive:
+      src: "{{tomcat_url}}"
+      dest: /home/ec2-user/
+      remote_src: yes
+  - name: download artifact from nexus
+    command: wget http://43.205.130.157:8081/repository/nexus_repo/com/maven/bt/SimpleWebApplication/9.1.14/SimpleWebApplication-9.1.14.war -P /home/ec2-user/apache-tomcat-10.0.23/webapps/
+  - name: start tomcat
+    command: nohup /home/ec2-user/apache-tomcat-10.0.23/bin/catalina.sh start &
