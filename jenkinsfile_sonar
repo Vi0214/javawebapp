@@ -1,0 +1,49 @@
+pipeline {
+	agent { label 'Maven' }
+		stages {
+                stage('git_checkout') {
+		   steps {
+                   git branch: 'main', credentialsId: 'Lnt_git_credential', url: 'https://github.com/Vi0214/javawebapp.git'
+			}
+		}
+      stage('Build') {
+		   steps {
+             sh '''
+			   mvn clean install
+			 '''
+			}
+		}
+      stage('Sonar') {
+		   steps {
+              withSonarQubeEnv('sonar') {
+              sh "mvn sonar:sonar"
+    }
+			}
+		}
+		stage('nexus') {
+		   steps {
+                   nexusArtifactUploader artifacts: [
+		   [artifactId: 'SimpleWebApplication', 
+		   classifier: '', 
+		   file: 'target/SimpleWebApplication.war', 
+		   type: 'war']
+		   ], 
+		   credentialsId: 'nexus_credentials', 
+		   groupId: 'com.maven.bt', 
+		   nexusUrl: '43.205.130.157:8081', 
+		   nexusVersion: 'nexus3', 
+		   protocol: 'http', 
+		   repository: 'nexus_repo', 
+		   version: '9.1.14'
+			}
+		}
+		stage('ansible') {
+		steps{
+		sh '''
+			   ansible-playbook tomcat.yml
+			 '''
+				
+		}
+		}
+ }
+}
