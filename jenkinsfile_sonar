@@ -39,10 +39,7 @@ pipeline {
 		}
 		stage('ansible') {
 		steps{
-		sh '''
-			   ansible-playbook tomcat.yml
-			 '''
-				
+		ansiblePlaybook credentialsId: 'private-key', disableHostKeyChecking: true, installation: 'ansible', inventory: 'host.inv', playbook: 'tomcat.yml'
 		}
 		}
  }
