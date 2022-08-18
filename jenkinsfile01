@@ -38,11 +38,13 @@ pipeline {
             }
         }
         stage('Ansible') {
-        ansiblePlaybook credentialsId: 'ansible_credent', 
-        disableHostKeyChecking: true, 
-        installation: 'ansible01', 
-        inventory: 'host.inv', 
-        playbook: 'tomcat.yml'
+            steps {
+                ansiblePlaybook credentialsId: 'ansible_credent', 
+                disableHostKeyChecking: true, 
+                installation: 'ansible01', 
+                inventory: 'host.inv', 
+                playbook: 'tomcat.yml'
+             }
         }
     }
 }
