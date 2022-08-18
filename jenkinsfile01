@@ -12,6 +12,11 @@ pipeline {
                 sh "mvn clean install"
             }
         }
+        stage('junit test') {
+            steps {
+                   jacoco()             
+            }
+        }
         stage('code quality check') {
            steps {
                 withSonarQubeEnv('sonar01') {
