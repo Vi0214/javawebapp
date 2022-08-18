@@ -14,7 +14,7 @@ pipeline {
         }
         stage('code quality check') {
            steps {
-                withSonarQubeEnv('sonar_credent01') {
+                withSonarQubeEnv('sonar01') {
                 sh "maven sonar:sonar"
                 }
            }
