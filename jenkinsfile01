@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('git checkout') {
+            steps {
+                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'git_credential', url: 'https://github.com/Vi0214/javawebapp.git']]])
+            }
+        }
+        stage('Build war file') {
+            steps {
+                sh "mvn clean install"
+            }
+        }    
+    }
+}
