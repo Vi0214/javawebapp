@@ -37,5 +37,12 @@ pipeline {
                 version: '9.1.14'
             }
         }
+        stage('Ansible') {
+        ansiblePlaybook credentialsId: 'ansible_credent', 
+        disableHostKeyChecking: true, 
+        installation: 'ansible01', 
+        inventory: 'host.inv', 
+        playbook: 'tomcat.yml'
+        }
     }
 }
