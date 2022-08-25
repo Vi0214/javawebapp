@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nodeapp-deployment
+  name: webapp-deployment
   labels:
-    app: nodeapp
+    app: webapp
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nodeapp
+      app: webapp
   template:
     metadata:
       labels:
-        app: nodeapp
+        app: webapp
     spec:
       containers:
-      - name: nodeserver
-        image: kavyamsrini/my-app1:2.0.0
+      - name: webserver
+        image: mydockerrepo/image01:1.0 #kavyamsrini/my-app1:2.0.0
         ports:
-        - containerPort: 3000
+        - containerPort: 8080
         
      
 ---
@@ -26,13 +26,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nodeapp-service
+  name: webapp-service
 spec:
   selector:
-    app: nodeapp
-  type: LoadBalancer
+    app: webapp
+  type: nodeport
   ports:
   - protocol: TCP
     port: 5000
-    targetPort: 3000
-    nodePort: 31110
+    targetPort: 8080
+    nodePort: 31111
